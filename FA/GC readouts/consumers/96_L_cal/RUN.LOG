@@ -1,0 +1,10 @@
+ 443 41e0 55b000d9  e5f
+Method       Method started: (B) line# 2 vial# 201 inj# 1   13:45:13 07/22/15
+  67 41e0 55b000d9    0
+Method       Instrument running sample vial# 201 (back)     13:45:13 07/22/15
+  70 41de 55b015f7    0
+CP Macro     Analyzing rawdata 15072202.D                   15:15:19 07/22/15
+  67 41e0 55b015fc    0
+Method       Instrument run completed                       15:15:24 07/22/15
+  67 41e0 55b0160c    0
+Method       Method completed                               15:15:40 07/22/15

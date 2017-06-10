@@ -1,0 +1,47 @@
+model{
+
+    for (j in 1:nprey){
+      prey[j,1:(nfas-1)] ~ dmnorm(mu[prey_types[j],1:(nfas-1)],sigma[prey_types[j],1:(nfas-1),1:(nfas-1)])
+    }
+
+    for (k in 1:nprey){
+      mu[k,1:(nfas-1)] ~ dmnorm(prior_mu[k,1:(nfas-1)],S[1:(nfas-1),1:(nfas-1)])
+      sigma[k,1:(nfas-1),1:(nfas-1)] ~ dwish(S[1:(nfas-1),1:(nfas-1)],(nfas-1))
+
+      sigma.pred[k,1:(nfas-1),1:(nfas-1)] ~ dwish(S[1:(nfas-1),1:(nfas-1)],(nfas-1))
+      sigma.pred.mu[k,1:(nfas-1),1:(nfas-1)] ~ dwish(S[1:(nfas-1),1:(nfas-1)],(nfas-1))
+
+      # is also the number of feeds
+
+      pred.mu[k,1:(nfas-1)] ~ dmnorm(mu.p[k,1:(nfas-1)],sigma.pred.mu[k,1:(nfas-1),1:(nfas-1)])
+
+      #closure & log-ratio transform
+      for (f in 1:(nfas-1))
+      {
+        l.mu[k,f]  <- mu.p.org[k,f]/mu.p.org[k,nfas]
+        mu.p[k,f] <- log(l.mu[k,f] )
+        mu.o[k,f] <- exp(mu[k,f])
+        mu.p.org[k,f] <- beta.reg[k,f]*mu.org[k,f]
+        # uniform dirichlet
+        ps[k,f] ~ dgamma(1/nfas,1)I(0.01,)
+      }
+      ps[k,nfas] ~ dgamma(1/nfas,1)I(0.01,)
+
+      mu.p.org[k,nfas] <- beta.reg[k,nfas]*mu.org[k,nfas]
+
+      #closure
+      mu.o[k,nfas] <- 1
+      mu.org[k,1:nfas] <- mu.o[k,1:nfas]/sum(mu.o[k,1:nfas])
+      # fractionation....
+      beta.reg[k,1:nfas] <- ps[k,1:nfas]/sum(ps[k,1:nfas] )
+
+    }
+
+    for (n in 1:npreds)
+    {
+      pred[n,1:(nfas-1)] ~
+dmnorm(pred.mu[prey_types[n],1:(nfas-1)],sigma.pred[prey_types[n],1:(nfas-1),1:(nfas-1)])
+    }
+
+
+}

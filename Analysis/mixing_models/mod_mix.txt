@@ -1,0 +1,49 @@
+
+model {
+
+    # priors on residual error and prey variability
+	for(iso in 1:niso){
+       # for(prey in 1:npreytypes){
+            #preytau[iso,prey] <- 10
+        preytau[iso] ~ dunif(0,100)
+            #preytau[iso] ~ dgamma(.001,.001)
+       # }
+	#	for(pred in 1:npreds){
+        e[iso] ~ dunif(-100,100)
+     #   }
+	}
+	
+    for(pred in 1:npreds){
+
+        # priors on weights for source proportion mean and var
+        p[1:npreytypes,pred] ~ ddirch(alpha[])
+        for(prey in 1:npreytypes) {
+            pvar[prey,pred] <- p[prey,pred]^2
+        }
+
+        for(prey in 1:npreytypes){
+            for(iso in 1:niso){
+
+                # allow prey values to vary
+ 				prey_mean[prey,iso,pred] ~ dnorm(prey_mean_data1[prey,iso,pred], preytau[iso])
+
+                # prey likelihood
+				prey_mean_data2[prey,iso,pred] ~ dnorm(prey_mean[prey,iso,pred], 1/prey_var[prey,iso,pred])
+            }
+        }
+
+        for(iso in 1:niso){
+
+            # mixing
+#            preds_mean[pred,iso] <- inprod(prey_mean_data[,iso,pred], p[,pred])		#basic
+            preds_mean[pred,iso] <- inprod(prey_mean[,iso,pred], p[,pred])				#fully bayesian
+            preds_var[pred,iso] <- inprod(prey_var[,iso,pred], pvar[,pred]) + e[iso] 	#residual err
+#            preds_var[pred,iso] <- inprod(prey_var[,iso,pred], pvar[,pred])			#basic
+            preds_prec[pred,iso] <- 1/preds_var[pred,iso]
+ 
+            # predator likelihood
+            preds_mean_data[pred,iso] ~ dnorm(preds_mean[pred,iso],preds_prec[pred,iso])
+        }
+    }
+}
+

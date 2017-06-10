@@ -1,0 +1,33 @@
+
+model {
+
+    for(samp in 1:nsamp){
+
+        # draw samp FA profiles from uninformative prior
+        prey_est[samp,1:nfas] ~ ddirch(alpha[])
+ #       prey_est[samp,1:nfas] ~ ddirch(prey_gmean[typevec[samp],1:nfas]) #galloway, etc.
+
+        # evaluate likelihood of samp draws by comparing to simulated data
+        prey_data[samp,1:nfas] ~ ddirch(prey_est[samp,1:nfas])
+
+        # draw conversion coefficients from uninformative prior
+        for(fa in 1:nfas){
+            mus[samp,fa] <- 0
+            taus[samp,fa] <- 1
+            conv_coef[samp,fa] ~ dlnorm(mus[samp,fa], taus[samp,fa])
+        }
+    
+        # combine samp FA profiles and conversion coefficients to predict predator FA profiles
+        for(fa in 1:nfas){
+            pre_pred_est[samp,fa] <- conv_coef[samp,fa] * prey_est[samp,fa]
+        }
+
+        # perform closure operation so that pred_est sums to 1
+        for(fa in 1:nfas){
+            pred_est[samp,fa] <- (1/sum(pre_pred_est[samp,1:nfas])) * pre_pred_est[samp,fa]
+        }
+    
+        # evaluate likelihood of predator FA profiles
+        pred_data[samp,] ~ ddirch(pred_est[samp,])
+    }
+}

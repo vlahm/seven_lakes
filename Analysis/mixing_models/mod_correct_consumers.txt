@@ -1,0 +1,60 @@
+
+model {
+
+	for(i in 1:nsamp){
+        
+        #priors
+		C_enrich_ind[i] ~ dnorm(0.39, 1/1.14^2)		    	# Post 2002
+		N_enrich_ind[i] ~ dnorm(3.4, 1/0.99^2)				# Post 2002
+		env_water_ind[i] ~ dnorm(0.28, 1/0.12^2)T(0,1)		# Brett, in prep.
+		C_true_ind[i] ~ dunif(-100, 50)
+		N_true_ind[i] ~ dunif(-100, 50)
+		H_true_ind[i] ~ dunif(-500, 100)
+		#trophic_lvl[i] ~ dunif(1,5)
+        
+        # half-Cauchy priors on SDs  
+        prior.scale.1[i] <- 4
+        tau.xi.1[i] <- pow(prior.scale.1[i], -2)
+        xi.1[i] ~ dnorm(0, tau.xi.1[i])
+        tau.eta.1[i] ~ dgamma(0.5, 0.5)
+        sd_C[i] <- abs(xi.1[i])/sqrt(tau.eta.1[i])
+        prec_C[i] <- pow(sd_C[i], -2)
+
+        prior.scale.2[i] <- 4
+        tau.xi.2[i] <- pow(prior.scale.2[i], -2)
+        xi.2[i] ~ dnorm(0, tau.xi.2[i])
+        tau.eta.2[i] ~ dgamma(0.5, 0.5)
+        sd_N[i] <- abs(xi.2[i])/sqrt(tau.eta.2[i])
+        prec_N[i] <- pow(sd_N[i], -2)
+
+        prior.scale.3[i] <- 30
+        tau.xi.3[i] <- pow(prior.scale.3[i], -2)
+        xi.3[i] ~ dnorm(0, tau.xi.3[i])
+        tau.eta.3[i] ~ dgamma(0.5, 0.5)
+        sd_H[i] <- abs(xi.3[i])/sqrt(tau.eta.3[i])
+        prec_H[i] <- pow(sd_H[i], -2)
+
+
+
+	#	sd_C[i] ~ dgamma(1,1)
+	#	prec_C[i] <- 1/sd_C[i]^2
+	#	sd_N[i] ~ dgamma(1,1)
+	#	prec_N[i] <- 1/sd_N[i]^2
+	#	sd_H[i] ~ dgamma(1,1)
+	#	prec_H[i] <- 1/sd_H[i]^2
+#		prec_C[i] ~ dgamma(1,1)
+#		prec_N[i] ~ dgamma(1,1)
+#		prec_H[i] ~ dgamma(1,1)
+        
+        # predict raw consumer data
+        C_predict[i] <- C_true_ind[i] + trophic_lvl[i] * C_enrich_ind[i]
+        N_predict[i] <- N_true_ind[i] + trophic_lvl[i] * N_enrich_ind[i]
+        env_water_tot[i] <- 1 - (1 - env_water_ind[i])^(trophic_lvl[i]-1)   #eqn 6 in Batt et al. 2012  
+        H_predict[i] <- H_true_ind[i] * (1 - env_water_tot[i]) + d2H2O[i] * env_water_tot[i]
+        
+        # likelihood
+        C_data[i] ~ dnorm(C_predict[i], prec_C[i])
+        N_data[i] ~ dnorm(N_predict[i], prec_N[i])
+        H_data[i] ~ dnorm(H_predict[i], prec_H[i])
+    }
+}

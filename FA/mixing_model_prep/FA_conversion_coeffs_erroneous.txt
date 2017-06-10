@@ -1,0 +1,41 @@
+
+model {
+    for(pred in 1:npred){
+
+        # draw prey FA profiles from the geo-mean for each prey type (in composition space)
+        for(prey in 1:nprey){
+            prey_est[pred,prey,] ~ ddirch(prey_gmean[prey,])
+        }
+        
+        # evaluate likelihood of prey draws
+        for(prey in 1:nprey){
+            prey_data[pred,prey,] ~ ddirch(prey_est[pred,prey,])
+        }
+
+        # draw conversion coefficients from uninformative prior
+        for(prey in 1:nprey){
+            bound_vec[1:nfas] <- 0
+            conv_coef[pred,prey,] ~ dmnorm(0, 0.001)I(bound_vec,)
+        }
+        
+        # combine prey FA profiles and conversion coefficients to predict predator FA profiles
+        for(prey in 1:nprey){
+            for(fa in 1:nfas){
+                pre_pred_est[pred,prey,fa] <- prey_est[pred,prey,fa] * conv_coef[pred,prey,fa]
+            }
+        }
+
+        # perform closure operation so that pred_est sums to 1
+        for(prey in 1:nprey){
+            for(fa in 1:nfas){
+                pred_est[pred,prey,fa] <- 1/sum(pre_pred_est[pred,prey,]) * pre_pred_est[pred,prey,fa]
+            }
+        }
+        
+        # evaluate likelihood of predator FA profiles
+        for(prey in 1:nprey){
+            pred_data[pred,prey,] ~ ddirch(pred_est[pred,prey,])
+        }
+    
+    }
+}

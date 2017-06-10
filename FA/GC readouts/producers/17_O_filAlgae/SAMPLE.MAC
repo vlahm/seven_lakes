@@ -1,0 +1,8 @@
+Name SAMPLEINFO
+CLRRPTSMPLINFO
+SAMPLECALISTD 1,0
+SAMPLECALAMT 0,1,1
+RPTSAMPLEINFO "no concentration or dilution; first attempts with POM, "
+RPTSAMPLEINFO "periphyton, filamentous algae"
+REMOVE SAMPLEINFO
+RETURN

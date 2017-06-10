@@ -1,0 +1,13 @@
+treatment,dead_nov7,dead_nov9,dead_nov11,dead_nov13,dead_nov15,dead_nov17,meandead_perday,stdevdead_perday,percap_meandead_perday,percap_stdevdead_perday,harvest_nov11,harvest_nov13,harvest_nov15,harvest_nov17,meanharvest_perday,stdevharvest_perday,percap_meanharvest_perday,percap_stdevharvest_perday
+crypto,0,1,0,0,0,1,0.333333333,0.516397779,0.016666667,0.025819889,13,3,6,1,5.75,5.251983752,0.2875,0.227417567
+mix_raw,8,12,8,,,,9.333333333,2.309401077,0.466666667,0.115470054,0,,,,0,,0,0
+mix_cond,3,9,14,5,10,18,9.833333333,5.564770136,0.491666667,0.278238507,6,2,0,4,3,2.581988897,0.15,0.111803399
+hea_raw,12,6,17,,,,11.66666667,5.507570547,0.583333333,0.275378527,0,,,,0,,0,0
+hea_cond,2,16,13,12,11,20,12.33333333,6.022181222,0.616666667,0.301109061,0,0,1,1,0.5,0.577350269,0.025,0.025
+,,,,,,,,,,,,,,,,,,
+,,,,Total Mortality,Total Harvest,total individuals,percent mortality,percent harvest,,,,,,,,,,
+,,,C. ozolinii,2,23,25,8,92,,,,,,,,,,
+,,,Mont.,28,0,28,100,0,,,,,,,,,,
+,,,Mont. pr.,59,12,71,83.09859155,16.90140845,,,,,,,,,,
+,,,Alpine,35,0,35,100,0,,,,,,,,,,
+,,,Alpine pr.,74,2,76,97.36842105,2.631578947,,,,,,,,,,

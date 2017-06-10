@@ -1,0 +1,68 @@
+
+model {
+
+    # group-level priors on unknowns: C:Na and d13C/d15N/d2H of phyto and peri
+    for (i in 1:ngroups){
+        #mean_cnA_group[i] ~ dnorm(6.7, 1/1.5^2)		    	# global mean and sd from Vuorio et al. 2006		
+        mean_d13CA_group[i] ~ dnorm(-31.1, 1/3.2^2)		    # analytical global dist across min, mean, max C:Na conditions
+ 		mean_d13Cperi_group[i] ~ dnorm(-22.1, 1/4.1^2)		# analytical for the others unless specified
+        mean_d15NA_group[i] ~ dnorm(-1.4, 1/1.3^2)
+        mean_d15Nperi_group[i] ~ dnorm(-7.3, 1/2.4^2)
+        mean_d2HA_group[i] ~ dunif(-400,0)                  # weakly informative assumption
+        mean_d2Hperi_group[i] ~ dnorm(-230.1, 1/18.6^2)
+    }
+    
+    for(i in 1:nlakes){
+		
+		# lake-level priors on unknowns
+        mean_eH_lake[i] ~ dnorm(-150, 1/27^2)              # from Brett, in prep
+		mean_cnA_lake[i] <- fixed_CNa[i]
+		mean_d13CA_lake[i] ~ dnorm(mean_d13CA_group[grps1[i]], prec_d13CA_grp[grps1[i]])
+		mean_d13Cperi_lake[i] ~ dnorm(mean_d13Cperi_group[grps1[i]], prec_d13Cperi_grp[grps1[i]])
+        mean_d15NA_lake[i] ~ dnorm(mean_d15NA_group[grps1[i]], prec_d15NA_grp[grps1[i]])
+        mean_d15Nperi_lake[i] ~ dnorm(mean_d15Nperi_group[grps1[i]], prec_d15Nperi_grp[grps1[i]])
+        mean_d2HA_lake[i] ~ dnorm(mean_d2HA_group[grps1[i]], prec_d2Hperi_grp[grps1[i]])
+        mean_d2Hperi_lake[i] ~ dnorm(mean_d2Hperi_group[grps1[i]], prec_d2Hperi_grp[grps1[i]])
+        
+        sd_d13Ca[i] ~ dunif(0,100)
+        sd_d15Na[i] ~ dunif(0,100)
+        sd_d2H2O[i] ~ dunif(0,200)
+        prec_d13Ca[i] <- 1/sd_d13Ca[i]^2
+        prec_d15Na[i] <- 1/sd_d15Na[i]^2
+        prec_d2H2O[i] <- 1/sd_d2H2O[i]^2
+        
+        sd_d13Cperi[i] ~ dunif(0,100)
+        sd_d15Nperi[i] ~ dunif(0,100)
+        sd_d2Hperi[i] ~ dunif(0,200)
+        prec_d13Cperi[i] <- 1/sd_d13Cperi[i]^2
+        prec_d15Nperi[i] <- 1/sd_d15Nperi[i]^2
+        prec_d2Hperi[i] <- 1/sd_d2Hperi[i]^2
+
+        # priors on knowns: C:Nt and d13C/d15N/d2H of terr
+        cnT[i] ~ dnorm(cn_terr[i], 1/cn_terr_sd[i]^2)
+        d13CT[i] ~ dnorm(d13C_terr[i], 1/d13CT_sd[i]^2)
+        d15NT[i] ~ dnorm(d15N_terr[i], 1/d15NT_sd[i]^2)
+        d2HT[i] ~ dnorm(d2H_terr[i], 1/d2HT_sd[i]^2)
+
+        # calculate isotope signatures for POM and raw peri
+        fracT_pom[i] <- (cnPOM[i] - mean_cnA_lake[i])/(cnT[i] - mean_cnA_lake[i])
+        fracT_peri[i] <- (cnperi[i] - mean_cnA_lake[i])/(cnT[i] - mean_cnA_lake[i])
+        d13C_POM[i] <- mean_d13CA_lake[i] * (1 - fracT_pom[i]) + (fracT_pom[i] * d13CT[i])
+        d13C_periraw[i] <- mean_d13Cperi_lake[i] * (1 - fracT_peri[i]) + (fracT_peri[i] * d13CT[i])
+        d15N_POM[i] <- mean_d15NA_lake[i] * (1 - fracT_pom[i]) + (fracT_pom[i] * d15NT[i])
+        d15N_periraw[i] <- mean_d15Nperi_lake[i] * (1 - fracT_peri[i]) + (fracT_peri[i] * d15NT[i])
+        d2H_periraw[i] <- mean_d2Hperi_lake[i] * (1 - fracT_peri[i]) + (fracT_peri[i] * d2HT[i])
+        
+		# calculate d2H-H2O
+		d2H2O[i] <- mean_d2HA_lake[i] - mean_eH_lake[i]
+
+        # likelihood
+        d13C_POM_data[i] ~ dnorm(d13C_POM[i], prec_d13Ca[i])
+        d13C_periraw_data[i] ~ dnorm(d13C_periraw[i], prec_d13Cperi[i])
+        d15N_POM_data[i] ~ dnorm(d15N_POM[i], prec_d15Na[i])
+        d15N_periraw_data[i] ~ dnorm(d15N_periraw[i], prec_d15Nperi[i])
+		d2H2O_data[i] ~ dnorm(d2H2O[i], prec_d2H2O[i])       # assuming sd on phyto ~~ sd on water        
+        d2H_periraw_data[i] ~ dnorm(d2H_periraw[i], prec_d2Hperi[i])
+    }
+}
+
