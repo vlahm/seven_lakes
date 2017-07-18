@@ -8,7 +8,7 @@
 rm(list=ls())
 
 # setup ####
-setwd("C:/Users/Mike/git/seven_lakes/Analysis/mixing_models/mixing_models2")
+setwd("/home/mike/git/seven_lakes/final/SI/mixing_models")
 merge.with.order <- function(x,y, ..., sort = T, keep_order)
 {
     # this function works just like merge, only that it adds the option to return the merged data.frame ordered by x (1) or by y (2)
@@ -126,5 +126,4 @@ sorted[,-(1:2)] <- apply(sorted[,-(1:2)], 2, as.numeric)
 # write output files ####
 # write.csv(agg, row.names=FALSE,
 #           file="C:/Users/Mike/git/seven_lakes/Analysis/mixing_models/mixing_models2/cor_agg.csv")
-write.csv(sorted, row.names=FALSE,
-          file="C:/Users/Mike/git/seven_lakes/Analysis/mixing_models/mixing_models2/cor_all.csv")
+write.csv(sorted, row.names=FALSE, file='cor_all.csv')

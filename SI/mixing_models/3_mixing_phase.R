@@ -2,8 +2,7 @@
 rm(list=ls(all=TRUE))
 # if (is.null(dev.list()) == FALSE){dev.off()}
 # windows(record=T)
-setwd('C:/Users/Mike/git/seven_lakes/Analysis/mixing_models/mixing_models2')
-# setwd('~/git/seven_lakes/stable_isotope_mixing_models/sensitivity_analysis')
+setwd("/home/mike/git/seven_lakes/final/SI/mixing_models")
 #commented out inits, changed plot limits for posterior
 
 
@@ -289,23 +288,23 @@ MLEs <- out[[1]]
 dens_chains <- out[[2]]
 
 #testing####
-predrows <- 1:31
-SI3 <- SI[predrows,]
-preds_mean_data <- cbind(SI3$cons_N_u,SI3$cons_H_u)
-preds_mean_data[,1] <- scale(preds_mean_data[,1])
-preds_mean_data[,2] <- scale(preds_mean_data[,2])
-prey_mean_data <- prey_mean_data[,,predrows]
-prey_mean_data <- apply(prey_mean_data, c(2,3), scale)
-prey_var_data <- prey_var_data[,,predrows]
-prey_var_data <- array(0.1, dim=c(3,2,length(predrows)))
-jags_data = list('niso'=2, 'npreytypes'=3, 'npreds'=length(predrows),
-                 'prey_mean_data'=prey_mean_data, 'prey_var'=prey_var_data,
-                 'preds_mean_data'=preds_mean_data,
-                 'alpha'=alpha1)
-pvals = c(0.33333, 0.33333, 0.33334)
-inits = function() { list('p' =  matrix(pvals, nrow=3, ncol=3, byrow=T)) }
-model = 'mod_alloch.txt'
-jags_params = c('p', 'preds_mean', 'preds_mean_data','prey_mean_data')
+# predrows <- 1:31
+# SI3 <- SI[predrows,]
+# preds_mean_data <- cbind(SI3$cons_N_u,SI3$cons_H_u)
+# preds_mean_data[,1] <- scale(preds_mean_data[,1])
+# preds_mean_data[,2] <- scale(preds_mean_data[,2])
+# prey_mean_data <- prey_mean_data[,,predrows]
+# prey_mean_data <- apply(prey_mean_data, c(2,3), scale)
+# prey_var_data <- prey_var_data[,,predrows]
+# prey_var_data <- array(0.1, dim=c(3,2,length(predrows)))
+# jags_data = list('niso'=2, 'npreytypes'=3, 'npreds'=length(predrows),
+#                  'prey_mean_data'=prey_mean_data, 'prey_var'=prey_var_data,
+#                  'preds_mean_data'=preds_mean_data,
+#                  'alpha'=alpha1)
+# pvals = c(0.33333, 0.33333, 0.33334)
+# inits = function() { list('p' =  matrix(pvals, nrow=3, ncol=3, byrow=T)) }
+# model = 'mod_alloch.txt'
+# jags_params = c('p', 'preds_mean', 'preds_mean_data','prey_mean_data')
 
 #plot ####
 biplot_bylake <- function(tracer1, tracer2, label_seed=1, titles=TRUE, legend=TRUE){

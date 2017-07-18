@@ -16,9 +16,9 @@ npreds=5
 npreytypes=3
 
 library(rjags)
-library(RColorBrewer)
-library(car)
-setwd("C:\\Users\\Mike\\git\\seven_lakes\\Analysis\\mixing_models\\mixing_models2")
+# library(RColorBrewer)
+# library(car)
+setwd("/home/mike/git/seven_lakes/final/SI/mixing_models")
 H_data <- read.csv("raw_H.csv")
 C_data <- read.csv("raw_C.csv")
 N_data <- read.csv("raw_N.csv")
