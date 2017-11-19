@@ -23,8 +23,7 @@ npreytypes=3
 library(rjags)
 library(RColorBrewer)
 library(car)
-setwd("C:\\Users\\Mike\\git\\seven_lakes\\Analysis\\mixing_models\\mixing_models2")
-# setwd("~/git/seven_lakes/stable_isotope_mixing_models/mixing_models2")
+setwd("~/git/seven_lakes/SI/mixing_models")
 H_data <- read.csv("raw_H.csv")
 C_data <- read.csv("raw_C.csv")
 N_data <- read.csv("raw_N.csv")
@@ -214,7 +213,6 @@ source_cor <- coda.samples(mod_source_cor, c('mean_d13CA_lake','mean_d13Cperi_la
                               thin=100, n.iter=1e5)
 
 #convergence
-# gelman.plot(source_cor) #shouldn't vary from 1 by more than .05
 g <- matrix(NA, nrow=nvar(source_cor), ncol=2)
 for (v in 1:nvar(source_cor)) {
     g[v,] <- gelman.diag(source_cor[,v])$psrf
@@ -300,7 +298,6 @@ cons_cor <- coda.samples(mod_cons_cor, c('C_true_ind', 'N_true_ind', 'H_true_ind
                               thin=100, n.iter=1e5)
 
 #convergence
-# gelman.plot(cons_cor) #shouldn't vary from 1 by more than .05
 g <- matrix(NA, nrow=nvar(cons_cor), ncol=2)
 for (v in 1:nvar(cons_cor)) {
     g[v,] <- gelman.diag(cons_cor[,v])$psrf

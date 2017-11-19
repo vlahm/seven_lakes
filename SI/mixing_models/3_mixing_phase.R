@@ -2,9 +2,8 @@
 rm(list=ls(all=TRUE))
 # if (is.null(dev.list()) == FALSE){dev.off()}
 # windows(record=T)
-setwd("/home/mike/git/seven_lakes/final/SI/mixing_models")
+setwd("/home/mike/git/seven_lakes/SI/mixing_models")
 #commented out inits, changed plot limits for posterior
-
 
 # added functions ####
 # library(RColorBrewer)
@@ -823,7 +822,7 @@ byspeclake <- function(){
 # tiff(type='cairo', res=300, width=6, height=6, units='in',
 #      filename='D:/Dropbox/Grad/Projects/Thesis/Seven Lakes Project 2014/Manuscript/figures/official_figures/figure_3.tif')
 byspeclake_out <- byspeclake()
-dev.off()
+# dev.off()
 
 # Mode <- function(x) {
 #     ux <- unique(x)

@@ -18,7 +18,7 @@ npreytypes=3
 library(rjags)
 # library(RColorBrewer)
 # library(car)
-setwd("/home/mike/git/seven_lakes/final/SI/mixing_models")
+setwd("/home/mike/git/seven_lakes/SI/mixing_models")
 H_data <- read.csv("raw_H.csv")
 C_data <- read.csv("raw_C.csv")
 N_data <- read.csv("raw_N.csv")
@@ -902,7 +902,7 @@ for(i in c('low','ave','hi')){
         sorted[,-(1:2)] <- apply(sorted[,-(1:2)], 2, as.numeric)
 
         write.csv(sorted, row.names=FALSE,
-                  file=paste0('C:/Users/Mike/git/seven_lakes/Analysis/mixing_models/mixing_models2/sensitivity/cor_',
+                  file=paste0('/home/mike/git/seven_lakes/SI/mixing_models/sensitivity/cor_',
                               i, j, '.csv'))
     }
 }
@@ -934,7 +934,7 @@ for(i in c('low','ave','hi')){
         sorted[,-(1:2)] <- apply(sorted[,-(1:2)], 2, as.numeric)
 
         write.csv(sorted, row.names=FALSE,
-                  file=paste0('C:/Users/Mike/git/seven_lakes/Analysis/mixing_models/mixing_models2/sensitivity/cor_',
+                  file=paste0('/home/mike/git/seven_lakes/SI/mixing_models/sensitivity/cor_',
                               i, j, '.csv'))
     }
 }
@@ -1018,8 +1018,8 @@ for(i in c('low','ave','hi')){
 
 # plot ####
 
-#just run setup and this. fetcher will err. no worries.
-setwd('C:\\Users\\Mike\\git\\seven_lakes\\Analysis\\mixing_models\\mixing_models2\\sensitivity')
+# can run only setup and this if saved files present. fetcher will err. no worries.
+setwd("/home/mike/git/seven_lakes/SI/mixing_models/sensitivity")
 data_fetcher <- function(){
 
     conds <- c('allvary','fixedw','fixedeH','fixedCNA')

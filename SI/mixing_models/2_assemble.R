@@ -8,7 +8,7 @@
 rm(list=ls())
 
 # setup ####
-setwd("/home/mike/git/seven_lakes/final/SI/mixing_models")
+setwd("/home/mike/git/seven_lakes/SI/mixing_models")
 merge.with.order <- function(x,y, ..., sort = T, keep_order)
 {
     # this function works just like merge, only that it adds the option to return the merged data.frame ordered by x (1) or by y (2)
